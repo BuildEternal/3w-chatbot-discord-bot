@@ -5,15 +5,15 @@ import commands from "./commands"
 dotenv.config()
 
 const clientId = process.env.CLIENT_ID
-const token = process.env.TOKEN
+const botToken = process.env.BOT_TOKEN
 
 export default async function () {
   if (!clientId) throw new Error("No client ID found!")
-  if (!token) throw new Error("No token found!")
+  if (!botToken) throw new Error("No token found!")
 
   const commandsJson = Array.from((await commands).values()).map((command) => command.data.toJSON())
 
-  const rest = new REST().setToken(token)
+  const rest = new REST().setToken(botToken)
 
   console.log("Refreshing application (/) commands…")
 

@@ -1,9 +1,19 @@
 set -v
 
+PROJECT_ID=$(curl "http://metadata.google.internal/computeMetadata/v1/project/project-id" -H "Metadata-Flavor: Google")
 REPO=https://github.com/BuildEternal/3w-chatbot-discord-bot
 
 # git requires $HOME and it's not set during the startup script.
 export HOME=/root
+
+export CLIENT_ID=1140443348159696987
+export BOT_TOKEN=$(
+    curl "https://secretmanager.googleapis.com/v1/projects/$(PROJECT_ID)/secrets/$(BOT_TOKEN)/versions/latest:access" \
+        --request "GET" \
+        --header "authorization: Bearer $(gcloud auth print-access-token)" \
+        --header "content-type: application/json" |
+        jq -r ".payload.data" | base64 --decode
+)
 
 # Install logging monitor. The monitor will automatically pick up logs sent to
 # syslog.
@@ -19,14 +29,17 @@ mkdir /opt/nodejs
 curl https://nodejs.org/dist/v16.15.0/node-v16.15.0-linux-x64.tar.gz | tar xvzf - -C /opt/nodejs --strip-components=1
 ln -s /opt/nodejs/bin/node /usr/bin/node
 ln -s /opt/nodejs/bin/npm /usr/bin/npm
+ln -s /opt/nodejs/bin/npx /usr/bin/npx
+ln -s /opt/nodejs/bin/ts-node /usr/bin/ts-node
 
 # Get the application source code from the Google Cloud Repository.
 git config --global credential.helper gcloud.sh
-git clone ${REPO} /opt/app/new-repo
+git clone ${REPO} /opt/app/discord-bot
 
 # Install app dependencies
-cd /opt/app/new-repo
+cd /opt/app/discord-bot
 npm install
+npm install -g ts-node
 
 # Create a nodeapp user. The application will run as this user.
 useradd -m -d /home/nodeapp nodeapp
@@ -35,7 +48,7 @@ chown -R nodeapp:nodeapp /opt/app
 # Configure supervisor to run the node app.
 cat >/etc/supervisor/conf.d/node-app.conf <<EOF
 [program:nodeapp]
-directory=/opt/app/new-repo
+directory=/opt/app/discord-bot
 command=npm start
 autostart=true
 autorestart=true

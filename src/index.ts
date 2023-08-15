@@ -5,9 +5,9 @@ import registerCommands from "./registerCommands"
 
 dotenv.config()
 
-const token = process.env.TOKEN
+const botToken = process.env.BOT_TOKEN
 
-if (!token) throw new Error("No token found!")
+if (!botToken) throw new Error("No token found!")
 
 const client = new Client({
   intents: ["Guilds", "GuildMessages", "MessageContent"],
@@ -24,4 +24,4 @@ client.on(Events.Error, (error) => {
   console.error(error)
 })
 
-client.login(token)
+client.login(botToken)
