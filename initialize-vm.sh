@@ -1,61 +1,41 @@
-set -v
-
 # Install logging monitor. The monitor will automatically pick up logs sent to syslog.
 curl -s "https://storage.googleapis.com/signals-agents/logging/google-fluentd-install.sh" | bash
 service google-fluentd restart &
 
 # Install dependencies from apt.
 apt-get update
-apt-get install -yq ca-certificates git build-essential supervisor
-
-# Set variables.
-# PROJECT_ID=$(curl "http://metadata.google.internal/computeMetadata/v1/project/project-id" -H "Metadata-Flavor: Google")
-REPO=https://github.com/BuildEternal/3w-chatbot-discord-bot
-
-# CLIENT_ID=1140443348159696987
-# BOT_TOKEN=$(
-#     curl "https://secretmanager.googleapis.com/v1/projects/${PROJECT_ID}/secrets/BOT_TOKEN/versions/latest:access" \
-#         --request "GET" \
-#         --header "authorization: Bearer $(gcloud auth print-access-token)" \
-#         --header "content-type: application/json" |
-#         jq -r ".payload.data" | base64 --decode
-# )
-
-# git requires $HOME and it's not set during the startup script.
-export HOME=/root
+apt-get install -yq ca-certificates git supervisor
 
 # Install and set up nodejs.
+curl -o- https://raw.githubusercontent.com/nvm-sh/nvm/v0.39.4/install.sh | bash
+source ~/.bashrc
 
-mkdir /opt/nodejs
-curl https://nodejs.org/dist/v16.15.0/node-v16.15.0-linux-x64.tar.gz | tar xvzf - -C /opt/nodejs --strip-components=1
-ln -s /opt/nodejs/bin/node /usr/bin/node
-ln -s /opt/nodejs/bin/npm /usr/bin/npm
-ln -s /opt/nodejs/bin/npx /usr/bin/npx
-
+nvm install node
+npm install -g npm@latest
 npm install -g ts-node
-ln -s /opt/nodejs/bin/ts-node /usr/bin/ts-node
 
-# Get the application source code from the repository.
-git config --global credential.helper gcloud.sh
-git clone ${REPO} /opt/app/discord-bot
+# Get the application source code.
+git config --global pull.ff true
+git clone https://github.com/BuildEternal/3w-chatbot-discord-bot.git /opt/discordbot/discord-bot
+
+# Set startup script for future reboots
+gcloud compute instances add-metadata discord-bot \
+    --zone=us-central1-c \
+    --metadata-from-file startup-script=/opt/discordbot/discord-bot/startup-script.sh
 
 # Install app dependencies
-cd /opt/app/discord-bot
+cd /opt/discordbot/discord-bot
 npm install
 
-# Create a nodeapp user. The application will run as this user.
-useradd -m -d /home/nodeapp nodeapp
-chown -R nodeapp:nodeapp /opt/app
-
-# Configure supervisor to run the node app.
-cat >/etc/supervisor/conf.d/node-app.conf <<EOF
-[program:nodeapp]
-directory=/opt/app/discord-bot
+# Configure supervisor to run the discord bot.
+cat >/etc/supervisor/conf.d/discord-bot.conf <<EOF
+[program:discordbot]
+directory=/opt/discordbot/discord-bot
 command=npm start
 autostart=true
 autorestart=true
-user=nodeapp
-environment=HOME="/home/nodeapp",USER="nodeapp",NODE_ENV="production"
+user=root
+environment=HOME="/root",USER="root",NODE_ENV="production",PATH="${PATH}"
 stdout_logfile=syslog
 stderr_logfile=syslog
 EOF
