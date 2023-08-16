@@ -2,7 +2,7 @@ import fs from "fs"
 import path from "path"
 
 import { Collection } from "discord.js"
-import { Command } from "../types/Command"
+import { Command } from "../types/command"
 
 const commands = new Collection<string, Command>()
 

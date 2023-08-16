@@ -1,27 +1,19 @@
-import { Client, Events } from "discord.js"
-import * as dotenv from "dotenv"
+import { Events } from "discord.js"
 import listenOnCommand from "./listeners/listenOnCommand"
 import registerCommands from "./registerCommands"
+import { discordBotToken, discordClient } from "./applicationInfo"
 
-dotenv.config()
+;(async () => {
+  discordClient.on(Events.ClientReady, () => {
+    console.log("Ready!")
+  })
 
-const botToken = process.env.BOT_TOKEN
+  listenOnCommand()
+  registerCommands()
 
-if (!botToken) throw new Error("No token found!")
+  discordClient.on(Events.Error, (error) => {
+    console.error(error)
+  })
 
-const client = new Client({
-  intents: ["Guilds", "GuildMessages", "MessageContent"],
-})
-
-client.on(Events.ClientReady, () => {
-  console.log("Ready!")
-})
-
-listenOnCommand(client)
-registerCommands()
-
-client.on(Events.Error, (error) => {
-  console.error(error)
-})
-
-client.login(botToken)
+  discordClient.login(await discordBotToken)
+})()

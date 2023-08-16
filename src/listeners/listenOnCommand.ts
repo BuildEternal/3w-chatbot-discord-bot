@@ -1,10 +1,11 @@
-import { Client, Events } from "discord.js"
+import { Events } from "discord.js"
 import commands from "../commands"
+import { discordClient } from "../applicationInfo"
 
-export default async function (client: Client) {
+export default async function () {
   const commandsCollection = await commands
 
-  client.on(Events.InteractionCreate, (interaction) => {
+  discordClient.on(Events.InteractionCreate, (interaction) => {
     if (!interaction.isChatInputCommand()) return
 
     const command = commandsCollection.get(interaction.commandName)
