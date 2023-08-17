@@ -1,5 +1,8 @@
 # TO BEGIN (RUN MANUALLY):
 
+# # Start root shell.
+# sudo -i
+
 # # Install dependencies from apt.
 # apt-get update
 # apt-get install -yq ca-certificates git supervisor
