@@ -17,6 +17,10 @@
 # # Initialize nvm PATH.
 # source ~/.bashrc
 
+# # Install Ops Agent.
+curl -sSO https://dl.google.com/cloudagents/add-google-cloud-ops-agent-repo.sh
+sudo bash add-google-cloud-ops-agent-repo.sh --also-install
+
 # Install and set up nodejs.
 curl -o- https://raw.githubusercontent.com/nvm-sh/nvm/v0.39.4/install.sh | bash
 source ~/.bashrc
