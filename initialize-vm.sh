@@ -8,10 +8,6 @@
 # git config --global pull.ff true
 # git clone https://github.com/BuildEternal/3w-chatbot-discord-bot.git /opt/discordbot/discord-bot
 
-# Install logging monitor. The monitor will automatically pick up logs sent to syslog.
-curl -s "https://storage.googleapis.com/signals-agents/logging/google-fluentd-install.sh" | bash
-service google-fluentd restart &
-
 # Install and set up nodejs.
 curl -o- https://raw.githubusercontent.com/nvm-sh/nvm/v0.39.4/install.sh | bash
 source ~/.bashrc
