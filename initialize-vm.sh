@@ -8,6 +8,9 @@
 # git config --global pull.ff true
 # git clone https://github.com/BuildEternal/3w-chatbot-discord-bot.git /opt/discordbot/discord-bot
 
+# # Run the initialization script.
+# bash /opt/discordbot/discord-bot/initialize-vm.sh
+
 # Install and set up nodejs.
 curl -o- https://raw.githubusercontent.com/nvm-sh/nvm/v0.39.4/install.sh | bash
 source ~/.bashrc
@@ -15,11 +18,6 @@ source ~/.bashrc
 nvm install node
 npm install -g npm@latest
 npm install -g ts-node
-
-# Set startup script for future reboots
-gcloud compute instances add-metadata discord-bot \
-    --zone=us-central1-c \
-    --metadata-from-file startup-script=/opt/discordbot/discord-bot/startup-script.sh
 
 # Install app dependencies
 cd /opt/discordbot/discord-bot
