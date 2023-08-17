@@ -15,7 +15,7 @@ export default async function () {
       return
     }
 
-    command.execute(interaction).catch((error) => {
+    command.execute(interaction).catch((error: unknown) => {
       console.error(error)
       if (interaction.replied || interaction.deferred) {
         interaction.followUp({ content: "There was an error while executing this command!"})

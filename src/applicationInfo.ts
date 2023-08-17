@@ -18,7 +18,7 @@ export const discordBotToken = secretManagerServiceClient
     }
     return data
   })
-  .catch((err) => {
+  .catch((err: unknown) => {
     console.error(err)
     throw new Error("Error retrieving bot token from Secret Manager.")
   })
