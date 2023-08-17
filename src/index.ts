@@ -1,7 +1,7 @@
 import { Events } from "discord.js"
-import listenOnCommand from "./listeners/listenOnCommand"
-import registerCommands from "./registerCommands"
-import { discordBotToken, discordClient } from "./applicationInfo"
+import listenOnCommand from "./listeners/listen-on-command"
+import registerCommands from "./register-commands"
+import { discordBotToken, discordClient } from "./application-info"
 
 ;(async () => {
   discordClient.on(Events.ClientReady, () => {

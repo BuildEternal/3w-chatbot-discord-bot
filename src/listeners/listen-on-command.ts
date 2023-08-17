@@ -1,6 +1,6 @@
 import { Events } from "discord.js"
 import commands from "../commands"
-import { discordClient } from "../applicationInfo"
+import { discordClient } from "../application-info"
 
 export default async function () {
   const commandsCollection = await commands
@@ -15,7 +15,7 @@ export default async function () {
       return
     }
 
-    command.execute(interaction).catch((error: unknown) => {
+    command.execute(interaction).catch((error) => {
       console.error(error)
       if (interaction.replied || interaction.deferred) {
         interaction.followUp({ content: "There was an error while executing this command!"})

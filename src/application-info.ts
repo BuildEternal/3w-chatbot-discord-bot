@@ -18,11 +18,11 @@ export const discordBotToken = secretManagerServiceClient
     }
     return data
   })
-  .catch((err: unknown) => {
+  .catch((err) => {
     console.error(err)
     throw new Error("Error retrieving bot token from Secret Manager.")
   })
-
+  
 export const discordClient = new Client({
   intents: ["Guilds", "GuildMessages", "MessageContent"],
 })

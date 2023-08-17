@@ -1,6 +1,6 @@
 import { REST, Routes } from "discord.js"
 import commands from "./commands"
-import { discordBotToken, discordApplicationId } from "./applicationInfo"
+import { discordBotToken, discordApplicationId } from "./application-info"
 
 export default async function () {
   const commandsJson = Array.from((await commands).values()).map((command) => command.data.toJSON())
