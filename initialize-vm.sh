@@ -11,6 +11,9 @@
 # # Run the initialization script.
 # bash /opt/discordbot/discord-bot/initialize-vm.sh
 
+# # Initialize nvm PATH.
+# source ~/.bashrc
+
 # Install and set up nodejs.
 curl -o- https://raw.githubusercontent.com/nvm-sh/nvm/v0.39.4/install.sh | bash
 source ~/.bashrc
