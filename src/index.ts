@@ -1,19 +1,16 @@
-import { Events } from "discord.js"
-import listenOnCommand from "./listeners/listen-on-command"
+import listenToChatInputCommandCreate from "./listeners/listen-to-chat-input-command-create"
+import listenToClientReady from "./listeners/listen-to-client-ready"
+import listenToError from "./listeners/listen-to-error"
+import loginToClient from "./login-to-client"
 import registerCommands from "./register-commands"
-import { discordBotToken, discordClient } from "./application-info"
 
-;(async () => {
-  discordClient.on(Events.ClientReady, () => {
-    console.log("Ready!")
-  })
+// Register listeners
+void listenToClientReady()
+listenToChatInputCommandCreate()
+void listenToError()
 
-  listenOnCommand()
-  registerCommands()
+// Register commands
+void registerCommands()
 
-  discordClient.on(Events.Error, (error) => {
-    console.error(error)
-  })
-
-  discordClient.login(await discordBotToken)
-})()
+// Login to client
+void loginToClient()

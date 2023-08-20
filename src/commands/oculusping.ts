@@ -1,13 +1,12 @@
-import { SlashCommandBuilder } from "discord.js"
-import { Command } from "../types/command"
+import { PermissionFlagsBits, SlashCommandBuilder } from "discord.js"
+import Command from "../classes/command"
 
-const command: Command = {
-  data: new SlashCommandBuilder()
+export default new Command(
+  new SlashCommandBuilder()
     .setName("oculusping")
-    .setDescription("Replies with pong!"),
-  execute: async (interaction) => {
-    await interaction.reply("Pong!")
-  },
-}
-
-export default command
+    .setDescription("Confirms that this client is successfully interfaced with the Oculus database.")
+    .setDefaultMemberPermissions(PermissionFlagsBits.ManageGuild),
+  async (interaction) => {
+    await interaction.reply("Interface confirmed.")
+  }
+)

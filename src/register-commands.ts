@@ -3,14 +3,17 @@ import commands from "./commands"
 import { discordBotToken, discordApplicationId } from "./application-info"
 
 export default async function () {
-  const commandsJson = Array.from((await commands).values()).map((command) => command.data.toJSON())
+  const commandsJson = Array.from(commands.values()).map((command) => command.data.toJSON())
 
   const rest = new REST().setToken(await discordBotToken)
 
   console.log("Refreshing application (/) commands…")
 
-  rest
-    .put(Routes.applicationCommands(discordApplicationId), { body: commandsJson })
-    .then(() => console.log("Successfully reloaded application (/) commands."))
-    .catch(console.error)
+  try {
+    await rest.put(Routes.applicationCommands(discordApplicationId), { body: commandsJson })
+
+    console.log("Successfully reloaded application (/) commands.")
+  } catch (error) {
+    console.error(error)
+  }
 }

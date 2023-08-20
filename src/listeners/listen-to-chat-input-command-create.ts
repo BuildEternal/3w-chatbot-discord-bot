@@ -2,13 +2,11 @@ import { Events } from "discord.js"
 import commands from "../commands"
 import { discordClient } from "../application-info"
 
-export default async function () {
-  const commandsCollection = await commands
-
-  discordClient.on(Events.InteractionCreate, (interaction) => {
+export default function () {
+  discordClient.on(Events.InteractionCreate, async (interaction) => {
     if (!interaction.isChatInputCommand()) return
 
-    const command = commandsCollection.get(interaction.commandName)
+    const command = (await commands).get(interaction.commandName)
 
     if (!command) {
       console.warn(`Command "${interaction.commandName}" not found.`)
@@ -18,9 +16,9 @@ export default async function () {
     command.execute(interaction).catch((error) => {
       console.error(error)
       if (interaction.replied || interaction.deferred) {
-        interaction.followUp({ content: "There was an error while executing this command!"})
+        interaction.followUp({ content: "There was an error while executing this command!" })
       } else {
-        interaction.reply({ content: "There was an error while executing this command!"})
+        interaction.reply({ content: "There was an error while executing this command!" })
       }
     })
   })
