@@ -1,21 +1,21 @@
 # TO BEGIN (RUN MANUALLY):
 
 # # Start root shell.
-# sudo -i
+sudo -i
 
 # # Install dependencies from apt.
-# apt-get update
-# apt-get install -yq ca-certificates git supervisor
+apt-get update
+apt-get install -yq ca-certificates git supervisor
 
 # # Get the application source code.
-# git config --global pull.ff true
-# git clone https://github.com/BuildEternal/3w-chatbot-discord-bot.git /opt/discordbot/discord-bot
+git config --global pull.ff true
+git clone https://github.com/BuildEternal/3w-chatbot-discord-bot.git /opt/discordbot/discord-bot
 
 # # Run the initialization script.
-# bash /opt/discordbot/discord-bot/initialize-vm.sh
+bash /opt/discordbot/discord-bot/initialize-vm.sh
 
 # # Initialize nvm PATH.
-# source ~/.bashrc
+source ~/.bashrc
 
 # # Install Ops Agent.
 curl -sSO https://dl.google.com/cloudagents/add-google-cloud-ops-agent-repo.sh
