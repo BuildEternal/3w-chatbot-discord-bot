@@ -1,3 +1,4 @@
+import listenToChannelRemove from "./listeners/listen-to-channel-remove"
 import listenToChat from "./listeners/listen-to-chat"
 import listenToChatInputCommandCreate from "./listeners/listen-to-chat-input-command-create"
 import listenToClientReady from "./listeners/listen-to-client-ready"
@@ -7,6 +8,7 @@ import registerCommands from "./register-commands"
 
 async function main() {
   // Register listeners
+  listenToChannelRemove()
   listenToChat()
   listenToChatInputCommandCreate()
   listenToClientReady()
