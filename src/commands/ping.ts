@@ -3,7 +3,7 @@ import Command from "../classes/command"
 
 export default new Command(
   new SlashCommandBuilder()
-    .setName("oculusping")
+    .setName("ping")
     .setDescription("Confirms that this client is successfully interfaced with the Oculus database.")
     .setDefaultMemberPermissions(PermissionFlagsBits.ManageGuild),
   async (interaction) => {

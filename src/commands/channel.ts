@@ -1,15 +1,12 @@
-// TODO: limit access to this command to a server admin role
-
-import { SlashCommandBuilder } from "discord.js"
+import { PermissionFlagsBits, SlashCommandBuilder } from "discord.js"
 import Command from "../classes/command"
-import { database } from "../database"
-// eslint-disable-next-line import/no-unresolved
+import { cacheManager, db } from "../database"
 import { FieldValue } from "firebase-admin/firestore"
 import ServerSettings from "../classes/server-settings"
 
 export default new Command(
   new SlashCommandBuilder()
-    .setName("oculuschannel")
+    .setName("channel")
     .setDescription("Manages the channels that the Oculus database is enabled in.")
     .addSubcommand((subcommand) =>
       subcommand.setName("enable").setDescription("Enables the Oculus database in this channel.")
@@ -19,19 +16,21 @@ export default new Command(
     )
     .addSubcommand((subcommand) =>
       subcommand.setName("list").setDescription("Lists the channels that the Oculus database is enabled in.")
-    ),
+    )
+    .setDefaultMemberPermissions(PermissionFlagsBits.ManageGuild),
   async (interaction) => {
     const subcommand = interaction.options.getSubcommand()
 
-    const settings = database.collection(`Bot/settings/${interaction.guildId}`).doc("settings")
+    const settings = db.collection(`Bot/settings/${interaction.guildId}`).doc("settings")
 
     if (subcommand === "enable") {
       await interaction.deferReply()
 
       try {
-        await settings.set(
+        await cacheManager.set(
+          settings,
           {
-            oculusChannels: FieldValue.arrayUnion(interaction.channelId),
+            enabledChannels: FieldValue.arrayUnion(interaction.channelId),
           },
           { merge: true }
         )
@@ -47,9 +46,10 @@ export default new Command(
       await interaction.deferReply()
 
       try {
-        await settings.set(
+        await cacheManager.set(
+          settings,
           {
-            oculusChannels: FieldValue.arrayRemove(interaction.channelId),
+            enabledChannels: FieldValue.arrayRemove(interaction.channelId),
           },
           { merge: true }
         )
@@ -65,15 +65,15 @@ export default new Command(
       await interaction.deferReply()
 
       try {
-        const settingsData = new ServerSettings((await settings.get()).data())
+        const settingsData = new ServerSettings((await cacheManager.get(settings)).data())
 
-        const oculusChannels = settingsData.oculusChannels
+        const enabledChannels = settingsData.enabledChannels
 
-        if (oculusChannels.length === 0) {
+        if (enabledChannels.length === 0) {
           await interaction.editReply("The Oculus database is not enabled in any channels.")
         } else {
           await interaction.editReply(
-            `The Oculus database is enabled in these channels:\n* <#${oculusChannels.join(">\n* <#")}>`
+            `The Oculus database is enabled in the following channels:\n* <#${enabledChannels.join(">\n* <#")}>`
           )
         }
       } catch (error) {

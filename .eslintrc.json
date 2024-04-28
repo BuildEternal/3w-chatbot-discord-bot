@@ -17,5 +17,12 @@
     "project": "./tsconfig.json"
   },
   "plugins": ["@typescript-eslint", "import"],
-  "rules": {}
+  "rules": {
+    "import/no-unresolved": [
+      "error",
+      {
+        "ignore": ["^firebase-admin/.+"]
+      }
+    ]
+  }
 }

@@ -1,7 +1,9 @@
 {
   "dependencies": {
+    "@google-cloud/dialogflow": "^6.0.0",
     "@google-cloud/secret-manager": "^5.0.0",
     "discord.js": "^14.12.1",
+    "dotenv": "^16.3.1",
     "firebase-admin": "^11.10.1"
   },
   "name": "discord-bot",

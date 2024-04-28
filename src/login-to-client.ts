@@ -1,5 +1,5 @@
 import { discordBotToken, discordClient } from "./application-info"
 
 export default async function () {
-  discordClient.login(await discordBotToken)
+  return await discordClient.login(await discordBotToken)
 }
