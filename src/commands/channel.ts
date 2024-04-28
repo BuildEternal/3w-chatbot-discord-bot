@@ -1,6 +1,6 @@
 import { PermissionFlagsBits, SlashCommandBuilder } from "discord.js"
 import Command from "../classes/command"
-import { cacheManager, db } from "../database"
+import { db } from "../database"
 import { FieldValue } from "firebase-admin/firestore"
 import ServerSettings from "../classes/server-settings"
 
@@ -27,8 +27,7 @@ export default new Command(
       await interaction.deferReply()
 
       try {
-        await cacheManager.set(
-          settings,
+        await settings.set(
           {
             enabledChannels: FieldValue.arrayUnion(interaction.channelId),
           },
@@ -46,8 +45,7 @@ export default new Command(
       await interaction.deferReply()
 
       try {
-        await cacheManager.set(
-          settings,
+        await settings.set(
           {
             enabledChannels: FieldValue.arrayRemove(interaction.channelId),
           },
@@ -65,7 +63,7 @@ export default new Command(
       await interaction.deferReply()
 
       try {
-        const settingsData = new ServerSettings((await cacheManager.get(settings)).data())
+        const settingsData = new ServerSettings((await settings.get()).data())
 
         const enabledChannels = settingsData.enabledChannels
 
